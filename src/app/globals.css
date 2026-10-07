@@ -48,10 +48,29 @@ body { background: var(--color-paper); color: var(--color-ink); font-family: var
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 
-/* Comanda para impressora térmica 80 mm */
+/* Impressão: comanda (80 mm) e documentos do assistente (A4 ou 80 mm) */
+.printing { display: none; }
 @media print {
   body * { visibility: hidden; }
-  .print-ticket, .print-ticket * { visibility: visible; }
-  .print-ticket { position: absolute; left: 0; top: 0; width: 72mm; font: 12px/1.35 ui-monospace, monospace; color: #000; }
-  @page { size: 80mm auto; margin: 4mm; }
+  .print-ticket, .print-ticket *, .printing, .printing * { visibility: visible; }
+  .print-ticket { position: absolute; left: 0; top: 0; width: 72mm; font: 12px/1.35 ui-monospace, monospace; color: #000; page: thermal; }
+  .printing { display: block; position: absolute; left: 0; top: 0; color: #000; background: #fff; }
+  .print-80 { width: 72mm; font: 12px/1.4 ui-monospace, monospace; page: thermal; }
+  .print-80 .center { text-align: center; } .print-80 .bold { font-weight: 700; } .print-80 .right { float: right; }
+  .print-80 hr { border: 0; border-top: 1px dashed #000; margin: 4px 0; }
+  .print-80 h1 { font-size: 14px; margin: 2px 0; } .print-80 .brand { font-weight: 700; }
+  .print-80 table { width: 100%; border-collapse: collapse; font-size: 11px; } .print-80 td, .print-80 th { text-align: left; padding: 1px 0; }
+  .print-80 .kpis div { display: flex; justify-content: space-between; }
+  .print-a4 { width: 100%; font: 11pt/1.45 var(--font-sans), system-ui, sans-serif; page: a4; }
+  .print-a4 .ph { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #ef7d32; padding-bottom: 10px; margin-bottom: 16px; }
+  .print-a4 .brand { font-weight: 700; font-size: 14pt; letter-spacing: -.02em; } .print-a4 .brand span { font-size: 7pt; letter-spacing: .5em; }
+  .print-a4 h1 { font-size: 20pt; font-weight: 700; letter-spacing: -.03em; margin: 4px 0 0; } .print-a4 .sub { color: #555; margin: 2px 0 0; }
+  .print-a4 .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
+  .print-a4 .kpis div { border: 1px solid #ddd; border-radius: 8px; padding: 8px; } .print-a4 .kpis span { display: block; font-size: 8pt; color: #666; text-transform: uppercase; letter-spacing: .06em; } .print-a4 .kpis b { font-size: 13pt; }
+  .print-a4 table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 10pt; }
+  .print-a4 th { text-align: left; border-bottom: 2px solid #161412; padding: 5px 6px; font-size: 8.5pt; text-transform: uppercase; letter-spacing: .05em; }
+  .print-a4 td { border-bottom: 1px solid #e5e5e5; padding: 5px 6px; } .print-a4 tfoot td { font-weight: 700; border-top: 2px solid #161412; }
+  .print-a4 .txt { margin: 8px 0; } .small { font-size: 8pt; color: #666; }
+  @page thermal { size: 80mm auto; margin: 4mm; }
+  @page a4 { size: A4; margin: 14mm; }
 }

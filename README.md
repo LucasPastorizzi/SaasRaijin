@@ -60,6 +60,13 @@ Sem WhatsApp configurado, o código de login aparece na tela (só em desenvolvim
 - **Cupons**, **Caixa** (abertura, sangria, suprimento e fechamento com conferência) e **Relatórios** (faturamento, ticket médio, recompra, tempos, itens, pagamentos, cupons, exportação CSV).
 - **Configurações:** horários com vários turnos, fechamento temporário, bairros e taxas, formas de pagamento, cashback, dados da loja e textos das mensagens.
 
+**Assistente de IA (painel → botão "Assistente")**
+- Chat com o Claude (`claude-opus-5-5`) para gerente e admin: "como foram as vendas da semana?", "quais VIPs sumiram?", "quanto cada motoboy tem pra acertar?", "qual o item mais vendido nas sextas?".
+- **Impressões:** "imprime o relatório de hoje" monta um documento A4 ou um cupom 80 mm, e "imprime a comanda do pedido 1150" reimprime a comanda. Aparece um botão Imprimir no chat.
+- **Só leitura:** as ferramentas consultam vendas, pedidos, clientes, cardápio, motoboys e caixa. Para perguntas livres há uma consulta SQL num banco aberto em modo somente leitura, que aceita só SELECT e bloqueia as tabelas de senhas e códigos.
+- Cada pergunta fica registrada no `audit_log` com as ferramentas usadas e o consumo de tokens.
+- Configure `ANTHROPIC_API_KEY` no `.env.local` e reinicie. O código está em `src/lib/server/ai.ts`.
+
 **Motoboy (`/motoboy`)**
 - Entra com telefone e PIN, abre e fecha turno.
 - Vê as entregas com o que cobrar e o troco.

@@ -6,6 +6,7 @@ import { ClipboardList, UtensilsCrossed, Bike, Users, MessageCircle, Ticket, Wal
 import { Logo } from "../logo";
 import { cx, Spinner, ToastProvider } from "../ui";
 import { api, useApi } from "@/lib/client";
+import { AssistantButton } from "./assistant";
 
 export type StaffUser = { id: number; name: string; email: string; role: "admin" | "gerente" | "atendente" | "cozinha" };
 const StaffCtx = createContext<StaffUser | null>(null);
@@ -68,6 +69,8 @@ export function PanelShell({ children }: { children: ReactNode }) {
             </header>
             {children}
           </div>
+
+          {canManage(data.staff) && <AssistantButton />}
 
           {/* navegação mobile */}
           <nav className="no-scrollbar fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t border-ink/10 bg-paper/95 backdrop-blur pb-[env(safe-area-inset-bottom)] lg:hidden">
