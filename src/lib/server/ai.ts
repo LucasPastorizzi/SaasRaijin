@@ -11,6 +11,7 @@ import { customersWithStats, SEGMENTS, type Segment } from "./crm";
 import { couriersOverview, settlementPreview } from "./couriers";
 import { activeOrders, orderDetail } from "./orders";
 import { loadMenu } from "./menu";
+import { emailDetail, listEmails } from "./email";
 import { brl, fold, ORDER_STATUS, PAYMENT_LABEL } from "@/lib/format";
 import { openStatus } from "@/lib/hours";
 
@@ -74,6 +75,7 @@ Tabelas (SQLite). Dinheiro SEMPRE em centavos (inteiro). Datas em ISO UTC: para 
 - coupons(code, type[pct|fixed|free_delivery], value, min_cents, uses, active)
 - cash_sessions(id, opened_at, closed_at, opening_cents, counted_cash_cents) / cash_movements(session_id, type[sangria|suprimento], amount_cents, at)
 - wa_conversations(phone, status, assigned_to, last_message_at) / wa_messages(conversation_id, direction[in|out], body, at)
+- email_messages(id, folder[entrada|enviados], direction, from_addr, from_name, to_addrs, subject, text, date, seen, customer_id)
 Pedidos válidos para faturamento: status != 'cancelado'.`;
 
 /* ---------- ferramentas ---------- */
@@ -204,6 +206,26 @@ export function buildTools(prints: PrintDoc[]) {
             movimentos: s.movements.map((m) => ({ tipo: m.type, valor: money(m.amount_cents), obs: m.note })), pago_motoboys: money(s.courierPaid),
             dinheiro_esperado: money(s.expectedCash) } : "fechado",
         });
+      },
+    }),
+
+    betaZodTool({
+      name: "emails",
+      description: "Lê os e-mails da loja guardados no painel (caixa de entrada ou enviados). Busque por texto, filtre não lidos ou abra um e-mail pelo id para ler o conteúdo.",
+      inputSchema: z.object({
+        pasta: z.enum(["entrada", "enviados"]).optional(),
+        busca: z.string().optional(),
+        nao_lidos: z.boolean().optional(),
+        abrir_id: z.number().int().optional().describe("Id de um e-mail para ler o texto completo"),
+      }),
+      run: async ({ pasta = "entrada", busca, nao_lidos, abrir_id }) => {
+        if (abrir_id) {
+          const m = emailDetail(abrir_id);
+          return m ? json({ id: m.id, de: `${m.from_name ?? ""} <${m.from_addr}>`, para: m.to_addrs, assunto: m.subject, data: m.date, texto: (m.text ?? "").slice(0, 6000),
+            anexos: m.attachments.map((a) => a.name), cliente: m.customer?.name ?? null }) : "E-mail não encontrado.";
+        }
+        return json(listEmails(pasta, busca, nao_lidos).slice(0, 25).map((m) => ({ id: m.id, de: m.from_name || m.from_addr, para: m.to_addrs, assunto: m.subject,
+          data: m.date, lido: !!m.seen, cliente: !!m.customer_id, trecho: m.preview })));
       },
     }),
 

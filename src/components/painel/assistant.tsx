@@ -16,10 +16,11 @@ const SUGGESTIONS = [
   "Imprime o relatório de vendas de hoje",
   "Imprime a comanda do último pedido",
   "Quanto cada motoboy tem para acertar?",
+  "Tem algum e-mail de fornecedor que ainda não lemos?",
 ];
 const TOOL_LABEL: Record<string, string> = {
   relatorio_vendas: "relatório de vendas", buscar_pedidos: "pedidos", pedidos_em_andamento: "pedidos abertos", clientes: "clientes",
-  cardapio: "cardápio", motoboys: "motoboys", caixa: "caixa", consulta_sql: "consulta no banco", preparar_impressao: "impressão", imprimir_comanda: "comanda",
+  cardapio: "cardápio", emails: "e-mails", motoboys: "motoboys", caixa: "caixa", consulta_sql: "consulta no banco", preparar_impressao: "impressão", imprimir_comanda: "comanda",
 };
 
 export function AssistantButton() {

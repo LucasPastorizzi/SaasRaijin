@@ -60,6 +60,17 @@ Sem WhatsApp configurado, o código de login aparece na tela (só em desenvolvim
 - **Cupons**, **Caixa** (abertura, sangria, suprimento e fechamento com conferência) e **Relatórios** (faturamento, ticket médio, recompra, tempos, itens, pagamentos, cupons, exportação CSV).
 - **Configurações:** horários com vários turnos, fechamento temporário, bairros e taxas, formas de pagamento, cashback, dados da loja e textos das mensagens.
 
+**E-mail (painel → E-mail)**
+- A caixa de entrada e os enviados da conta de e-mail da loja ficam dentro do painel.
+  - **Leitura e envio:** lê pelo IMAP e envia pelo SMTP; funciona com Gmail, Outlook, Hostinger, Zoho e outros.
+  - **Sincronização:** busca e-mails novos ao abrir a tela e a cada 2 min. Marcar como lido no painel também marca no servidor.
+- Dá para responder (mantendo a conversa agrupada) e escrever e-mails novos.
+- O HTML dos e-mails abre isolado, sem scripts, por segurança.
+- Se o remetente tem o e-mail cadastrado no CRM, a ficha e os pedidos dele aparecem ao lado.
+- **Confirmação de pedido por e-mail**, com o visual do Raijin, quando o pedido é recebido e quando é entregue (para clientes com e-mail). Liga e desliga em Configurações.
+- O assistente de IA também consegue ler e buscar e-mails, por exemplo: "tem e-mail de fornecedor não lido?".
+- Configure as variáveis `EMAIL_*` (ver `.env.example`). Sem elas, roda em modo simulação, com um simulador de e-mail recebido.
+
 **Assistente de IA (painel → botão "Assistente")**
 - Chat com o Claude (`claude-opus-5-5`) para gerente e admin: "como foram as vendas da semana?", "quais VIPs sumiram?", "quanto cada motoboy tem pra acertar?", "qual o item mais vendido nas sextas?".
 - **Impressões:** "imprime o relatório de hoje" monta um documento A4 ou um cupom 80 mm, e "imprime a comanda do pedido 1150" reimprime a comanda. Aparece um botão Imprimir no chat.

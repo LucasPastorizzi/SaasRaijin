@@ -227,6 +227,10 @@ async function notify(orderId: number, status: string) {
     .replaceAll("{pin}", o.delivery_pin)
     .replaceAll("{motivo}", o.cancel_reason ?? "");
   await sendWhatsApp(o.phone, text, { kind: "template", author: "sistema" });
+  if (status === "novo" || status === "entregue") {
+    const { sendOrderEmail } = await import("./email");
+    await sendOrderEmail(orderId, status).catch((e) => console.error("e-mail do pedido:", e));
+  }
 }
 
 /* ---------------- leitura ---------------- */

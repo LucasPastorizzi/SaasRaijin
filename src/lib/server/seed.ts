@@ -123,7 +123,7 @@ export const DEFAULT_SETTINGS = {
     address: "Rua Pinto Bandeira, 305 · Sala 01 · Sete de Setembro · Ivoti/RS", instagram: "raijinsushi",
   },
   hours: { "0": [], "1": [], "2": [[19, 22]], "3": [[11.5, 13.5], [19, 22]], "4": [[11.5, 13.5], [19, 22]], "5": [[11.5, 13.5], [19, 22]], "6": [[11.5, 13.5], [19, 22]] } as Hours,
-  ops: { minOrderCents: 3000, prepMinutes: 30, deliveryBaseMinutes: 35, forceClosed: false, autoPrint: false, allowScheduling: true, pickupEnabled: true },
+  ops: { minOrderCents: 3000, prepMinutes: 30, deliveryBaseMinutes: 35, forceClosed: false, autoPrint: false, allowScheduling: true, pickupEnabled: true, emailReceipts: true },
   payments: { pix: true, card_online: false, cash: true, card_machine: true },
   loyalty: { enabled: true, everyCents: 10000, rewardCents: 500 },
   messages: {

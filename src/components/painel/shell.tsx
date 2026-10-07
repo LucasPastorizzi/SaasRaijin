@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, type ReactNode } from "react";
-import { ClipboardList, UtensilsCrossed, Bike, Users, MessageCircle, Ticket, Wallet, BarChart3, Settings, LogOut, ExternalLink } from "lucide-react";
+import { ClipboardList, UtensilsCrossed, Bike, Users, MessageCircle, Mail, Ticket, Wallet, BarChart3, Settings, LogOut, ExternalLink } from "lucide-react";
 import { Logo } from "../logo";
 import { cx, Spinner, ToastProvider } from "../ui";
 import { api, useApi } from "@/lib/client";
@@ -19,6 +19,7 @@ const NAV = [
   { href: "/painel/motoboys", label: "Motoboys", icon: Bike },
   { href: "/painel/clientes", label: "Clientes", icon: Users },
   { href: "/painel/whatsapp", label: "WhatsApp", icon: MessageCircle, badge: "wa" },
+  { href: "/painel/email", label: "E-mail", icon: Mail, badge: "mail" },
   { href: "/painel/cupons", label: "Cupons", icon: Ticket },
   { href: "/painel/caixa", label: "Caixa", icon: Wallet },
   { href: "/painel/relatorios", label: "Relatórios", icon: BarChart3 },
@@ -30,6 +31,8 @@ export function PanelShell({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { data, loading } = useApi<{ staff: StaffUser | null }>(path === "/painel/login" ? null : "/api/staff/session");
   const { data: wa } = useApi<{ unread: number }>(data?.staff ? "/api/admin/wa?filter=abertas" : null, 8000);
+  const { data: mail } = useApi<{ unread: number }>(data?.staff ? "/api/admin/email?count=1" : null, 30000);
+  const badge = (b?: string) => (b === "wa" ? wa?.unread : b === "mail" ? mail?.unread : 0) ?? 0;
 
   useEffect(() => { if (!loading && data && !data.staff) router.replace("/painel/login"); }, [data, loading, router]);
 
@@ -47,7 +50,7 @@ export function PanelShell({ children }: { children: ReactNode }) {
               {NAV.map((n) => (
                 <Link key={n.href} href={n.href} className={cx("flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors", active(n.href) ? "bg-salmon text-white" : "text-paper/70 hover:bg-white/8 hover:text-paper")}>
                   <n.icon className="size-4.5" />{n.label}
-                  {n.badge === "wa" && !!wa?.unread && <span className="ml-auto rounded-full bg-salmon px-1.5 text-xs font-bold text-white">{wa.unread}</span>}
+                  {badge(n.badge) > 0 && <span className="ml-auto rounded-full bg-salmon px-1.5 text-xs font-bold text-white">{badge(n.badge)}</span>}
                 </Link>
               ))}
             </nav>
@@ -77,7 +80,7 @@ export function PanelShell({ children }: { children: ReactNode }) {
             {NAV.map((n) => (
               <Link key={n.href} href={n.href} className={cx("relative flex min-w-[76px] flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-semibold", active(n.href) ? "text-salmon-deep" : "text-ink/55")}>
                 <n.icon className="size-5" />{n.label}
-                {n.badge === "wa" && !!wa?.unread && <span className="absolute right-4 top-1 size-2 rounded-full bg-salmon" />}
+                {badge(n.badge) > 0 && <span className="absolute right-4 top-1 size-2 rounded-full bg-salmon" />}
               </Link>
             ))}
           </nav>

@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.0",
+    "imapflow": "^2.2.10",
     "lucide-react": "^1.52.0",
+    "mailparser": "^3.9.36",
     "next": "16.4.0",
+    "nodemailer": "^10.0.16",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1",
@@ -19,7 +22,9 @@
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
+    "@types/mailparser": "^3.9.0",
     "@types/node": "^26.6.4",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

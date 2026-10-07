@@ -9,12 +9,12 @@ import { DAY_SHORT, fmtHour, type Hours } from "@/lib/hours";
 type Settings = {
   store: { name: string; tagline: string; phone: string; address: string; instagram: string };
   hours: Hours;
-  ops: { minOrderCents: number; prepMinutes: number; deliveryBaseMinutes: number; forceClosed: boolean; autoPrint: boolean; allowScheduling: boolean; pickupEnabled: boolean };
+  ops: { minOrderCents: number; prepMinutes: number; deliveryBaseMinutes: number; forceClosed: boolean; autoPrint: boolean; allowScheduling: boolean; pickupEnabled: boolean; emailReceipts?: boolean };
   payments: { pix: boolean; card_online: boolean; cash: boolean; card_machine: boolean };
   loyalty: { enabled: boolean; everyCents: number; rewardCents: number };
   messages: Record<string, string>;
   zones: { id?: number; name: string; fee_cents: number; extra_minutes: number; active: number | boolean }[];
-  integrations: { whatsapp: boolean; payments: boolean; site: string | null };
+  integrations: { email: { imap: boolean; smtp: boolean; address: string | null }; whatsapp: boolean; payments: boolean; site: string | null };
 };
 
 const toTime = (h: number) => `${String(Math.floor(h)).padStart(2, "0")}:${String(Math.round((h % 1) * 60)).padStart(2, "0")}`;
@@ -53,6 +53,7 @@ function SettingsForm({ initial, manage, toast }: { initial: Settings; manage: b
           <Toggle checked={s.ops.forceClosed} onChange={(v) => setS({ ...s, ops: { ...s.ops, forceClosed: v } })} label="Fechar loja temporariamente (pausa todos os pedidos)" />
           <Toggle checked={s.ops.allowScheduling} onChange={(v) => setS({ ...s, ops: { ...s.ops, allowScheduling: v } })} label="Permitir pedidos agendados quando fechado" />
           <Toggle checked={s.ops.pickupEnabled} onChange={(v) => setS({ ...s, ops: { ...s.ops, pickupEnabled: v } })} label="Aceitar retirada no balcão" />
+          <Toggle checked={s.ops.emailReceipts ?? true} onChange={(v) => setS({ ...s, ops: { ...s.ops, emailReceipts: v } })} label="Enviar confirmação de pedido por e-mail (clientes com e-mail cadastrado)" />
           <div className="grid grid-cols-3 gap-3">
             <Field label="Pedido mínimo (R$)"><Input inputMode="decimal" value={centsToInput(s.ops.minOrderCents)} onChange={(e) => setS({ ...s, ops: { ...s.ops, minOrderCents: inputToCents(e.target.value) } })} /></Field>
             <Field label="Tempo de preparo (min)"><Input type="number" value={s.ops.prepMinutes} onChange={(e) => setS({ ...s, ops: { ...s.ops, prepMinutes: Number(e.target.value) } })} /></Field>
@@ -130,6 +131,7 @@ function SettingsForm({ initial, manage, toast }: { initial: Settings; manage: b
 
         <Card className="flex flex-col gap-2 p-5">
           <h2 className="font-bold">Integrações</h2>
+          <p className="text-sm">E-mail: {s.integrations.email.imap && s.integrations.email.smtp ? <Badge tone="ok">{s.integrations.email.address}</Badge> : <Badge tone="warn">simulação</Badge>}</p>
           <p className="text-sm">WhatsApp Cloud API: {s.integrations.whatsapp ? <Badge tone="ok">conectado</Badge> : <Badge tone="warn">simulação</Badge>}</p>
           <p className="text-sm">Gateway de pagamento (Pix/cartão): {s.integrations.payments ? <Badge tone="ok">conectado</Badge> : <Badge tone="warn">simulação</Badge>}</p>
           <p className="text-xs text-ink/55">As chaves ficam nas variáveis de ambiente do servidor (ver README), nunca no painel.</p>
