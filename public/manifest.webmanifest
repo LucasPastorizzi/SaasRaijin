@@ -1,0 +1,11 @@
+{
+  "name": "Raijin Sushi",
+  "short_name": "Raijin",
+  "description": "Peça sushi, temaki e pokes do Raijin em Ivoti.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3ece1",
+  "theme_color": "#ef7d32",
+  "lang": "pt-BR",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

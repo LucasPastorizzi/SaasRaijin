@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* Identidade Raijin: papel creme, tinta, salmão; Outfit + Shippori Mincho; ondas seigaiha */
+@theme {
+  --color-paper: #f3ece1;
+  --color-paper-2: #ebe2d3;
+  --color-paper-3: #e2d6c3;
+  --color-ink: #161412;
+  --color-ink-2: #2a2622;
+  --color-salmon: #ef7d32;
+  --color-salmon-deep: #d9621b;
+  --color-salmon-soft: #f6b07e;
+  --color-torii: #c2362b;
+  --color-ok: #2f9e5b;
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
+  --font-jp: var(--font-shippori), serif;
+  --radius-xl2: 1.25rem;
+}
+
+:root { color-scheme: light; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--color-salmon); color: #fff; }
+
+.seigaiha {
+  background-color: var(--color-paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40' viewBox='0 0 80 40'%3E%3Cg fill='none' stroke='%23161412' stroke-opacity='.05' stroke-width='1.2'%3E%3Cpath d='M0 40a40 40 0 0 1 80 0M8 40a32 32 0 0 1 64 0M16 40a24 24 0 0 1 48 0M24 40a16 16 0 0 1 32 0M32 40a8 8 0 0 1 16 0'/%3E%3Cpath d='M-40 20a40 40 0 0 1 80 0M-32 20a32 32 0 0 1 64 0M-24 20a24 24 0 0 1 48 0M-16 20a16 16 0 0 1 32 0M-8 20a8 8 0 0 1 16 0M40 20a40 40 0 0 1 80 0M48 20a32 32 0 0 1 64 0M56 20a24 24 0 0 1 48 0M64 20a16 16 0 0 1 32 0M72 20a8 8 0 0 1 16 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 80px 40px;
+}
+
+.h-title { font-weight: 700; letter-spacing: -0.04em; line-height: 0.95; text-transform: lowercase; }
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes bolt { 0% { stroke-dashoffset: 120; } 100% { stroke-dashoffset: 0; } }
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(239,125,50,.55); } 100% { box-shadow: 0 0 0 14px rgba(239,125,50,0); } }
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.anim-rise { animation: rise .5s cubic-bezier(.2,.8,.2,1) both; }
+.anim-pop { animation: pop .5s cubic-bezier(.3,1.4,.5,1) both; }
+.anim-sheet { animation: sheet-up .38s cubic-bezier(.2,.8,.2,1) both; }
+.anim-fade { animation: fade .25s ease both; }
+.pulse-ring { animation: pulse-ring 1.4s infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* Comanda para impressora térmica 80 mm */
+@media print {
+  body * { visibility: hidden; }
+  .print-ticket, .print-ticket * { visibility: visible; }
+  .print-ticket { position: absolute; left: 0; top: 0; width: 72mm; font: 12px/1.35 ui-monospace, monospace; color: #000; }
+  @page { size: 80mm auto; margin: 4mm; }
+}
