@@ -86,6 +86,16 @@ Sem WhatsApp configurado, o código de login aparece na tela (só em desenvolvim
 
 Papéis da equipe: `admin`, `gerente`, `atendente`, `cozinha`. Cozinha e atendente podem pausar itens, mas não editam preços.
 
+## Demonstração na Vercel
+
+Dá para subir na Vercel sem configurar nada: importe o repositório em vercel.com/new (Framework: Next.js) e faça o deploy.
+
+- Na Vercel o app entra sozinho em **modo demonstração**: o banco é criado em `/tmp` com o cardápio e os dados de exemplo, a loja fica aberta o dia todo, e o login do painel e do motoboy ganham o botão "Entrar como demonstração". O código do WhatsApp aparece na tela e o Pix pode ser simulado.
+- Os dados **não são permanentes**: quando a Vercel recicla a instância (depois de um tempo parado ou a cada deploy), tudo volta ao estado inicial. Isso é bom para apresentar, mas não serve para operar a loja.
+- Todas as rotas da API passam por uma única função (`src/app/api/[...path]/route.ts`, gerada por `python3 scripts/gen-api-router.py` a partir de `src/server-routes/`), para que a loja e o painel usem a mesma instância.
+- **Opcional:** `ANTHROPIC_API_KEY` nas variáveis de ambiente da Vercel liga o assistente de IA.
+- Para desligar o modo demonstração: `DEMO_MODE=0`. Nesse caso, siga a seção abaixo.
+
 ## Produção — o que falta configurar
 
 1. **Banco:** o SQLite precisa de **disco persistente**. Dá para rodar num VPS, Railway ou Fly.io com volume, usando `DATABASE_PATH`. Na **Vercel** (serverless, sem disco) é preciso migrar para Postgres/Supabase. O SQL de `src/lib/server/db.ts` foi escrito para ser portável.

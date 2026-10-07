@@ -90,7 +90,7 @@ export function Tracking() {
         </div>
       )}
 
-      {o.payment_method === "pix" && o.payment_status === "pendente" && o.status !== "cancelado" && <PixBox code={o.code} total={o.total_cents} onPaid={reload} />}
+      {o.payment_method === "pix" && o.payment_status === "pendente" && o.status !== "cancelado" && <PixBox code={o.code} total={o.total_cents} onPaid={reload} demo={!!menu?.demo} />}
 
       {o.status === "entregue" && !o.rating && <Review code={o.code} onDone={() => { reload(); toast("Valeu pela avaliação! 🧡", "ok"); }} />}
 
@@ -125,7 +125,7 @@ export function Tracking() {
   );
 }
 
-function PixBox({ code, total, onPaid }: { code: string; total: number; onPaid: () => void }) {
+function PixBox({ code, total, onPaid, demo }: { code: string; total: number; onPaid: () => void; demo: boolean }) {
   const toast = useToast();
   // TODO(produção): o copia-e-cola vem do gateway (Mercado Pago/Asaas). Aqui é um exemplo.
   const copy = `00020126580014BR.GOV.BCB.PIX0136raijin-exemplo-pix52040000530398654${String((total / 100).toFixed(2)).padStart(6, "0")}5802BR5912RAIJIN SUSHI6005IVOTI62080504${code}6304ABCD`;
@@ -137,9 +137,9 @@ function PixBox({ code, total, onPaid }: { code: string; total: number; onPaid: 
         <code className="min-w-0 flex-1 truncate rounded-xl bg-ink/6 px-3 py-2.5 text-xs">{copy}</code>
         <Button variant="ink" onClick={() => { navigator.clipboard.writeText(copy); toast("Código Pix copiado", "ok"); }}><Copy className="size-4" />Copiar</Button>
       </div>
-      {process.env.NODE_ENV !== "production" && (
+      {demo && (
         <button className="mt-3 text-xs font-semibold text-salmon-deep underline cursor-pointer" onClick={async () => { await api(`/api/orders/${code}`, { body: { action: "pay-dev" } }); onPaid(); }}>
-          (dev) simular pagamento confirmado
+          (demonstração) simular pagamento confirmado
         </button>
       )}
     </div>

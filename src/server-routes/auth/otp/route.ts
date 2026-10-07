@@ -5,6 +5,7 @@ import { get, nowIso, run } from "@/lib/server/db";
 import { HttpError, startSession } from "@/lib/server/session";
 import { sendWhatsApp, WA_LIVE } from "@/lib/server/whatsapp";
 import { normPhone } from "@/lib/format";
+import { isStrictProd } from "@/lib/server/env";
 
 // Login do cliente pelo WhatsApp: pede código → recebe no Whats → confirma.
 const schema = z.discriminatedUnion("action", [
@@ -26,7 +27,7 @@ export const POST = api(async (req) => {
     await sendWhatsApp(phone, `Teu código Raijin é *${code}*. Não compartilhe com ninguém. Vale por 10 minutos.`, { kind: "template", author: "sistema" });
     const known = get<{ name: string | null }>("SELECT name FROM customers WHERE phone = ?", phone);
     // Em modo simulação (sem WhatsApp configurado) devolvemos o código para facilitar o desenvolvimento.
-    return { ok: true, known: !!known?.name, devCode: WA_LIVE || process.env.NODE_ENV === "production" ? undefined : code };
+    return { ok: true, known: !!known?.name, devCode: WA_LIVE || isStrictProd() ? undefined : code };
   }
 
   const row = get<{ code: string; expires_at: number; attempts: number }>("SELECT * FROM otp_codes WHERE phone = ?", phone);

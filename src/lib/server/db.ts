@@ -3,11 +3,12 @@ import { DatabaseSync } from "node:sqlite";
 import fs from "node:fs";
 import path from "node:path";
 import { seed } from "./seed";
+import { dbPath } from "./env";
 
 // Banco local (SQLite embutido no Node). Em produção, trocar por Postgres (Supabase) —
 // o SQL foi escrito para ser portável (sem features exclusivas do SQLite além de json_*).
 
-const DB_PATH = process.env.DATABASE_PATH || path.join(process.cwd(), "data", "raijin.db");
+const DB_PATH = dbPath();
 
 const SCHEMA = `
 PRAGMA journal_mode = WAL;

@@ -2,6 +2,7 @@ import type { DatabaseSync } from "node:sqlite";
 import crypto from "node:crypto";
 import { hashPassword } from "./password";
 import type { Hours } from "@/lib/hours";
+import { isDemo, isStrictProd } from "./env";
 
 // Cardápio real do Raijin (preços de referência, out/2026 — confirmar com o restaurante).
 // Adicionais e zonas de entrega são EXEMPLOS para desenvolvimento: ajustar pelo painel.
@@ -145,8 +146,10 @@ export function seed(d: DatabaseSync) {
   try {
     const set = d.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)");
     for (const [k, v] of Object.entries(DEFAULT_SETTINGS)) set.run(k, JSON.stringify(v));
+    // demonstração: loja aberta o dia todo para dar pra testar pedido a qualquer hora (horários reais editáveis no painel)
+    if (isDemo()) set.run("hours", JSON.stringify(Object.fromEntries([0, 1, 2, 3, 4, 5, 6].map((d) => [String(d), [[0, 24]]]))));
 
-    if (process.env.NODE_ENV === "production" && !process.env.ADMIN_PASSWORD) throw new Error("Defina ADMIN_EMAIL e ADMIN_PASSWORD antes do primeiro start em produção");
+    if (isStrictProd() && !process.env.ADMIN_PASSWORD) throw new Error("Defina ADMIN_EMAIL e ADMIN_PASSWORD antes do primeiro start em produção");
     d.prepare("INSERT OR IGNORE INTO staff (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')")
       .run("Administrador", (process.env.ADMIN_EMAIL || "admin@raijin.local").toLowerCase(), hashPassword(process.env.ADMIN_PASSWORD || "raijin123"));
 

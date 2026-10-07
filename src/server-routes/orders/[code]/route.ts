@@ -3,6 +3,7 @@ import { api, body } from "@/lib/server/api";
 import { get, nowIso, run } from "@/lib/server/db";
 import { orderDetail } from "@/lib/server/orders";
 import { currentCustomer, currentStaff, HttpError } from "@/lib/server/session";
+import { isStrictProd } from "@/lib/server/env";
 
 async function load(code: string) {
   const o = orderDetail("code", code);
@@ -33,7 +34,7 @@ export const POST = api<{ code: string }>(async (req, ctx) => {
     return { ok: true };
   }
   // Simula a confirmação do Pix (em produção quem faz isso é o webhook do gateway).
-  if (process.env.NODE_ENV === "production") throw new HttpError(404, "Indisponível");
+  if (isStrictProd()) throw new HttpError(404, "Indisponível");
   run("UPDATE orders SET payment_status = 'pago' WHERE id = ?", o.id);
   run("INSERT INTO order_events (order_id, status, note, by, at) VALUES (?, 'pagamento', 'Pix confirmado', 'gateway', ?)", o.id, nowIso());
   return { ok: true };

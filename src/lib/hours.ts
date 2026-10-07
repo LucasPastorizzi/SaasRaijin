@@ -23,7 +23,7 @@ export function openStatus(hours: Hours, forceClosed = false) {
   const { day, h } = spNow();
   if (forceClosed) return { open: false, label: "Fechado temporariamente", closesAt: null as number | null };
   const cur = (hours[day] ?? []).find(([a, b]) => h >= a && h < b);
-  if (cur) return { open: true, label: `Aberto · até ${fmtHour(cur[1])}`, closesAt: cur[1] };
+  if (cur) return { open: true, label: cur[1] >= 24 ? "Aberto agora" : `Aberto · até ${fmtHour(cur[1])}`, closesAt: cur[1] };
   for (let i = 0; i < 8; i++) {
     const d = (day + i) % 7;
     const nx = (hours[d] ?? []).find(([a]) => i > 0 || h < a);

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "@/components/logo";
 import { Button, Field, Input } from "@/components/ui";
-import { api } from "@/lib/client";
+import { api, useApi } from "@/lib/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const { data } = useApi<{ demo: boolean }>("/api/staff/session");
   return (
     <div className="seigaiha grid min-h-dvh place-items-center px-4">
       <form className="w-full max-w-sm rounded-3xl bg-paper p-7 shadow-xl ring-1 ring-ink/10"
@@ -25,6 +26,11 @@ export default function LoginPage() {
           <Field label="E-mail"><Input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus /></Field>
           <Field label="Senha" error={err}><Input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
           <Button size="lg" className="mt-1" loading={busy}>Entrar</Button>
+          {data?.demo && (
+            <Button type="button" size="lg" variant="line" onClick={async () => { setBusy(true); try { await api("/api/staff/session", { body: { demo: true } }); router.replace("/painel"); } catch (e) { setErr((e as Error).message); setBusy(false); } }}>
+              Entrar como demonstração
+            </Button>
+          )}
         </div>
       </form>
     </div>

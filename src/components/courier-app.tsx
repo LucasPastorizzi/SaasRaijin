@@ -26,6 +26,7 @@ function CourierInner() {
 
 function CourierLogin({ onDone }: { onDone: () => void }) {
   const [phone, setPhone] = useState(""), [pin, setPin] = useState(""), [err, setErr] = useState<string | null>(null), [busy, setBusy] = useState(false);
+  const { data: demo } = useApi<{ demo: boolean }>("/api/courier/session");
   return (
     <div className="flex min-h-dvh flex-col bg-ink px-5 py-10 text-paper">
       <Logo tone="paper" />
@@ -38,6 +39,7 @@ function CourierLogin({ onDone }: { onDone: () => void }) {
         <Input inputMode="numeric" type="password" placeholder="PIN" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} className="h-14 bg-paper text-lg tracking-[.4em]" />
         {err && <p className="text-sm font-semibold text-salmon-soft">{err}</p>}
         <Button size="lg" loading={busy}>Entrar</Button>
+        {demo?.demo && <Button type="button" size="lg" variant="paper" onClick={async () => { await api("/api/courier/session", { body: { demo: true } }); onDone(); }}>Entrar como motoboy de demonstração</Button>}
       </form>
       <p className="mt-auto pt-10 text-xs text-paper/50">O PIN é cadastrado pelo gerente no painel.</p>
     </div>

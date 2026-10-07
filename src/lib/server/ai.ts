@@ -1,11 +1,11 @@
 import "server-only";
 import { DatabaseSync } from "node:sqlite";
-import path from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodTool } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
 import { all, db, getSetting } from "./db";
 import { DEFAULT_SETTINGS } from "./seed";
+import { dbPath } from "./env";
 import { report, cashSummary, openCashSession } from "./finance";
 import { customersWithStats, SEGMENTS, type Segment } from "./crm";
 import { couriersOverview, settlementPreview } from "./couriers";
@@ -39,7 +39,7 @@ export type ChatTurn = { role: "user" | "assistant"; content: string };
 let ro: DatabaseSync | null = null;
 function readOnlyDb() {
   db(); // garante que o banco existe e está migrado
-  ro ??= new DatabaseSync(/*turbopackIgnore: true*/ process.env.DATABASE_PATH || path.join(process.cwd(), "data", "raijin.db"), { readOnly: true });
+  ro ??= new DatabaseSync(/*turbopackIgnore: true*/ dbPath(), { readOnly: true });
   return ro;
 }
 const BLOCKED = /\b(staff|otp_codes|password_hash|pin|sqlite_\w+|pragma|attach|detach|load_extension|vacuum|insert|update|delete|drop|alter|create|replace)\b/i;

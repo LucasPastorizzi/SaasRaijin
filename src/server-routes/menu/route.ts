@@ -3,6 +3,7 @@ import { all, getSetting } from "@/lib/server/db";
 import { bestSellers, loadMenu } from "@/lib/server/menu";
 import { DEFAULT_SETTINGS } from "@/lib/server/seed";
 import { openStatus } from "@/lib/hours";
+import { isStrictProd } from "@/lib/server/env";
 
 export const GET = api(() => {
   const { categories, products } = loadMenu();
@@ -19,5 +20,6 @@ export const GET = api(() => {
     categories,
     products,
     bestSellers: bestSellers(),
+    demo: !isStrictProd(),
   };
 });

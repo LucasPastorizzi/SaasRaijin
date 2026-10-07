@@ -2,6 +2,7 @@ import "server-only";
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { get } from "./db";
+import { isStrictProd } from "./env";
 
 // Sessões em cookie assinado (HMAC). Três "portas": cliente, equipe e motoboy.
 type Kind = "customer" | "staff" | "courier";
@@ -10,7 +11,7 @@ const TTL: Record<Kind, number> = { customer: 60 * 60 * 24 * 90, staff: 60 * 60 
 
 function secret() {
   const s = process.env.SESSION_SECRET;
-  if (!s && process.env.NODE_ENV === "production") throw new Error("Defina SESSION_SECRET nas variáveis de ambiente");
+  if (!s && isStrictProd()) throw new Error("Defina SESSION_SECRET nas variáveis de ambiente");
   return s || "dev-only-secret-troque-em-producao";
 }
 

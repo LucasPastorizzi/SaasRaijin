@@ -17,6 +17,7 @@ export type MenuData = {
   categories: MenuCategory[];
   products: MenuProduct[];
   bestSellers: number[];
+  demo?: boolean;
 };
 
 export type Me = {
